@@ -779,13 +779,28 @@ function renderTrajectory() {
     // own as games are played.
     const seasons = [...new Set(Object.values(DATA.trajectories)
       .flatMap(s => s.map(p => p.s)))].sort((a, b) => a - b);
-    const SEASON_SPAN = 24;    // weeks 1-22 (incl. playoffs) + breathing room
-    const X = p => seasons.indexOf(p.s) * SEASON_SPAN + p.w;
+    const SEASON_SPAN = 24;
+    const FULL_WEEKS = 22;     // regular season + a full playoff run
+    const maxSeason = Math.max(...seasons);
+    // Seamless season hand-off: each COMPLETED season is stretched so its
+    // last game sits exactly on the span edge — the step across the dashed
+    // boundary is then one ordinary game step, no visual hop. The newest
+    // (possibly ongoing) season fills left-to-right proportionally.
     const traces = teams.map(t => {
       const s = DATA.trajectories[t];
       const col = TC[t] || SLATE_MID;
       const isHi = TRAJ_HIGHLIGHT && t === TRAJ_HIGHLIGHT;
       const dim = TRAJ_HIGHLIGHT && !isHi;
+      const lastw = {};
+      s.forEach(p => { lastw[p.s] = Math.max(lastw[p.s] || 0, p.w); });
+      const X = p => {
+        const idx = seasons.indexOf(p.s);
+        if (p.s === maxSeason) {
+          return idx * SEASON_SPAN + p.w * (SEASON_SPAN / FULL_WEEKS);
+        }
+        const step = SEASON_SPAN / Math.max(lastw[p.s], 18);
+        return idx * SEASON_SPAN + SEASON_SPAN - (lastw[p.s] - p.w) * step;
+      };
       return {
         type: 'scatter', mode: 'lines', name: t,
         x: s.map(X), y: s.map(p => p.r),
@@ -797,9 +812,10 @@ function renderTrajectory() {
     });
     // dashed vertical line at each season change + the year labeled above
     // each season's span
+    const halfStep = 0.5 * SEASON_SPAN / FULL_WEEKS;
     const shapes = seasons.slice(1).map((yr, i) => ({
       type: 'line', xref: 'x', yref: 'paper',
-      x0: (i + 1) * SEASON_SPAN - 0.5, x1: (i + 1) * SEASON_SPAN - 0.5,
+      x0: (i + 1) * SEASON_SPAN + halfStep, x1: (i + 1) * SEASON_SPAN + halfStep,
       y0: 0, y1: 1,
       line: { color: SLATE_MID, width: 1, dash: 'dash' }, layer: 'below',
     }));

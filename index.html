@@ -604,14 +604,14 @@ document.getElementById('meta-thresh').textContent = CHIP_ON
   ? BET_EDGE.toFixed(0) + '+ pt gap = bet signal'
   : BET_EDGE.toFixed(0) + '+ pt gap = paper-track lean';
 document.getElementById('sched-blurb').innerHTML = CHIP_ON
-  ? 'The model&rsquo;s line vs the betting market. A bet chip appears only when '
+  ? 'The model\u2019s line vs the betting market. A bet chip appears only when '
     + 'EVERYTHING aligns: a ' + BET_EDGE.toFixed(0) + '+ point disagreement AND '
     + 'the game falls inside the live betting window. Bet early in the week; the '
     + 'market drifts toward the model. <b>The verdict sentence is the call; chips '
     + 'just explain it.</b>'
-  : 'The model&rsquo;s line vs the betting market. <b>No bet chips right now</b> '
-    + '&mdash; the ' + BET_EDGE.toFixed(0) + '-point rule was invalidated on '
-    + '2026-08-11, when six corrected seasons put it at 52.0% ATS (&minus;2.4u), '
+  : 'The model\u2019s line vs the betting market. <b>No bet chips right now</b> '
+    + '\u2014 the ' + BET_EDGE.toFixed(0) + '-point rule was invalidated on '
+    + '2026-08-11, when six corrected seasons put it at 52.0% ATS (\u22122.4u), '
     + 'so every call below is a paper-track lean until it is revalidated. '
     + '<b>The verdict sentence is the call; chips just explain it.</b>';
 document.getElementById('sched-date').textContent = DATA.meta.week_label || '—';
@@ -778,8 +778,8 @@ function lightenHex(hex, mix) {
 }
 const FACTOR_DEF_COLORS = {};   // darker = offense, lighter = defense (Danny 2026-07-06)
 Object.keys(FACTOR_COLORS).forEach(f => { FACTOR_DEF_COLORS[f] = lightenHex(FACTOR_COLORS[f], 0.5); });
-const DECOMP_SUB_SPLIT = 'Each rating split into its sources &middot; darker = offense, lighter = defense';
-const DECOMP_SUB_NET = 'Each team&rsquo;s rating, split into its sources &middot; the pieces add up to the Rank number';
+const DECOMP_SUB_SPLIT = 'Each rating split into its sources \u00b7 darker = offense, lighter = defense';
+const DECOMP_SUB_NET = 'Each team\u2019s rating, split into its sources \u00b7 the pieces add up to the Rank number';
 
 function renderDecomp() {
   const rows = DATA.rankings.slice().sort((a,b) => a.rating - b.rating);
@@ -1080,7 +1080,7 @@ function teamNote(team, qbName, qbBackup) {
   const bits = [];
   if (qbName) bits.push('QB ' + qbName);
   if (qbBackup) bits.push('<span class="qbtag">BACKUP</span>');
-  return bits.length ? bits.join(' &middot; ') : '&nbsp;';
+  return bits.length ? bits.join(' \u00b7 ') : '\u00a0';
 }
 
 // Per-game signal chips (BET TUESDAY / EDGE SPOT / situational) were removed
@@ -1317,8 +1317,8 @@ function renderHappened(g) {
     cell(r.a) + cell(r.h) + '<td class="od-net">' + plusTxt(r.m, H, A) + '</td></tr>').join('');
   return '<div class="attr-block od-block">' + head +
     '<div class="attr-sub">Points (EPA) each team produced vs a league-average team. Passing, rushing, turnovers: ' +
-      'each offense (its defense is the other column, flipped). Special teams: each team&rsquo;s kicks, net of the return. ' +
-      'Penalties: what each team&rsquo;s own penalties cost it. Kickoff restarts: the ball each team gets back on kickoffs, ' +
+      'each offense (its defense is the other column, flipped). Special teams: each team\u2019s kicks, net of the return. ' +
+      'Penalties: what each team\u2019s own penalties cost it. Kickoff restarts: the ball each team gets back on kickoffs, ' +
       'which EPA credits to no one.</div>' +
     '<table class="od-table"><thead><tr><th></th><th>' + A + '</th><th>' + H + '</th><th>Margin</th></tr></thead><tbody>' +
       body +
@@ -1344,7 +1344,7 @@ function renderVsExpected(g) {
     rows.map(r => factorRow(r.label, r.color, r.bRaw, r.b, H, A, maxAbs) +
       (r.key === 'pass' && Math.abs(R.qb) >= 0.05
         ? '<div class="attr-note">Includes the QB edge, ' + favors(R.qb, H, A) + '</div>' : '')).join('') +
-    '<div class="attr-total"><span>Model had ' + marginTxt(R.expTot, H, A, 1) + ' &middot; final ' +
+    '<div class="attr-total"><span>Model had ' + marginTxt(R.expTot, H, A, 1) + ' \u00b7 final ' +
       marginTxt(+g.margin, H, A, 0) + '</span><b>' + favors(R.swing, H, A) + '</b></div>' +
     '<div class="od-note">Other: home field, schedule, kickoff restarts and leftover.</div>' +
     (g.pregame_saved === false
@@ -1412,8 +1412,8 @@ function renderForecast() {
   rows.sort((a, b) => (+b[FCST_SORT] || 0) - (+a[FCST_SORT] || 0));
   if (DATA.meta.forecast_label) {
     document.getElementById('fcst-sub').innerHTML =
-      DATA.meta.forecast_label.replace('·', '&middot;') +
-      ' &mdash; every game gets the model&rsquo;s odds, then the playoff bracket plays out in each simulated season.';
+      DATA.meta.forecast_label.replace('·', '\u00b7') +
+      ' \u2014 every game gets the model\u2019s odds, then the playoff bracket plays out in each simulated season.';
   }
   list.innerHTML = rows.map(r => {
     const c = TC[r.team] || SLATE_MID;
